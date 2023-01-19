@@ -1,65 +1,11 @@
 import {Component} from 'react';
 import PropTypes from 'prop-types';
-import {
-    head,
-    tail,
-    isPlainObject,
-    isArray,
-    isNil,
-    flatMap,
-    keys,
-    toPairs,
-    fromPairs,
-    mapValues,
-    zipObject,
-    isElement,
-    uniq
-} from 'lodash';
+import { isArray, isElement } from 'lodash';
 
 
 // HELPER FUNCTIONS //
 const plotlyRestyle = (graphDiv, layout_update) =>
     Plotly.update(graphDiv, {}, layout_update);
-
-const isValidTrace = (trace) =>
-    isPlainObject(trace) && !isNil(trace.index);
-
-const filterTrace = (trace) => fromPairs(
-    toPairs(trace)
-        .filter(([_, value]) => !isNil(value))
-        .filter(([key, _]) => !['x', 'y'].includes(key) || trace.x !== [])
-);
-
-const filterTraces = (traces) =>
-    traces
-        .filter(isValidTrace)
-        .map(filterTrace);
-
-const formatValue = (value) =>
-    isArray(value) ? [value] : value;
-
-const formatTrace = (trace) =>
-    mapValues(trace, formatValue);
-
-const formatTraces = (traces) =>
-    traces.map(formatTrace);
-
-const mergeKeys = (traces) =>
-    uniq(flatMap(traces, keys));
-
-const mergeValues = (traces, allkeys) =>
-    allkeys.map(
-        key => traces.map(
-            trace => trace[key] ?? []
-        )
-    );
-
-const mergeTraces = (traces) => {
-    const allkeys = mergeKeys(traces);
-    const allvalues = mergeValues(traces, allkeys);
-    return zipObject(allkeys, allvalues);
-};
-
 
 /**
  * LayoutUpdater is a component which updates the trace-data of a plotly graph.
@@ -91,7 +37,7 @@ export default class LayoutUpdater extends Component {
         }
 
         // EXECUTION //
-        formatTraces(updateData).forEach(update => plotlyRestyle(graphDiv, update));
+        plotlyRestyle(graphDiv, updateData[0]);
 
         return idDiv;
     }
