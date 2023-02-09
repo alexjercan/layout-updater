@@ -4,24 +4,24 @@
     "displayName": "LayoutUpdater",
     "methods": [
       {
-        "name": "shouldLogscaleUpdate",
-        "docblock": null,
-        "modifiers": [],
-        "params": [
-          {
-            "name": "{logscale}",
-            "type": null
-          }
-        ],
-        "returns": null
-      },
-      {
         "name": "shouldAnnotationsUpdate",
         "docblock": null,
         "modifiers": [],
         "params": [
           {
             "name": "{annotations}",
+            "type": null
+          }
+        ],
+        "returns": null
+      },
+      {
+        "name": "shouldShapesUpdate",
+        "docblock": null,
+        "modifiers": [],
+        "params": [
+          {
+            "name": "{shapes}",
             "type": null
           }
         ],
@@ -50,12 +50,12 @@
         "required": false,
         "description": "The data to update the graph with, it is a list containing the annotations"
       },
-      "logscale": {
+      "shapes": {
         "type": {
           "name": "array"
         },
         "required": false,
-        "description": "Tells if we should change to logscale"
+        "description": "The data to update the graph with, it is a list containing the shapes"
       },
       "setProps": {
         "type": {

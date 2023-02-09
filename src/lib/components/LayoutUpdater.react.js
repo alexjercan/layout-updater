@@ -7,16 +7,8 @@ import { isElement } from 'lodash';
 const plotlyRestyle = (graphDiv, annotations) =>
     Plotly.relayout(graphDiv, {annotations: annotations});
 
-// TODO: Try to figure out why this is not working properly
-const convertToType = (logscale, index) => Object.fromEntries([
-    [`yaxis${index === 0 ? "" : index + 1}`, {
-        type: logscale ? "log" : "linear",
-        // autorange: "reversed",
-    }]
-])
-
-const plotlyRescale = (graphDiv, logscales) =>
-    logscales.forEach((logscale, index) => Plotly.relayout(graphDiv, convertToType(logscale, index)));
+const plotlyReshape = (graphDiv, shapes) =>
+    Plotly.relayout(graphDiv, {shapes: shapes});
 
 /**
  * LayoutUpdater is a component which updates the annotations of a plotly graph.
@@ -24,21 +16,21 @@ const plotlyRescale = (graphDiv, logscales) =>
 export default class LayoutUpdater extends Component {
 
     static #prevAnnotations = null;
-    static #prevLogscale = null;
-
-    shouldLogscaleUpdate({logscale}) {
-        return logscale !== undefined && LayoutUpdater.#prevLogscale !== logscale;
-    }
+    static #prevShapes = null;
 
     shouldAnnotationsUpdate({annotations}) {
         return annotations !== undefined && LayoutUpdater.#prevAnnotations !== annotations;
     }
 
+    shouldShapesUpdate({shapes}) {
+        return shapes !== undefined && LayoutUpdater.#prevShapes !== shapes;
+    }
+
     render() {
-        const {id, gdID, annotations, logscale} = this.props;
+        const {id, gdID, annotations, shapes} = this.props;
         const idDiv = <div id={id}></div>;
 
-        if (!this.shouldLogscaleUpdate(this.props) && !this.shouldAnnotationsUpdate(this.props)) {
+        if (!this.shouldAnnotationsUpdate(this.props) && !this.shouldShapesUpdate(this.props)) {
             return idDiv;
         }
 
@@ -61,9 +53,9 @@ export default class LayoutUpdater extends Component {
             plotlyRestyle(graphDiv, annotations);
         }
 
-        if (this.shouldLogscaleUpdate(this.props)) {
-            LayoutUpdater.#prevLogscale = logscale;
-            plotlyRescale(graphDiv, logscale);
+        if (this.shouldShapesUpdate(this.props)) {
+            LayoutUpdater.#prevShapes = shapes;
+            plotlyReshape(graphDiv, shapes);
         }
 
         return idDiv;
@@ -100,9 +92,9 @@ LayoutUpdater.propTypes = {
     annotations: PropTypes.array,
 
     /**
-     * Tells if we should change to logscale
+     * The data to update the graph with, it is a list containing the shapes
      */
-    logscale: PropTypes.array,
+    shapes: PropTypes.array,
 
     /**
      * Dash-assigned callback that should be called to report property changes
