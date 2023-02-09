@@ -1,25 +1,44 @@
 import {Component} from 'react';
 import PropTypes from 'prop-types';
-import { isArray, isElement } from 'lodash';
+import { isElement } from 'lodash';
 
 
 // HELPER FUNCTIONS //
-const plotlyRestyle = (graphDiv, layout_update) =>
-    Plotly.update(graphDiv, {}, layout_update);
+const plotlyRestyle = (graphDiv, annotations) =>
+    Plotly.relayout(graphDiv, {annotations: annotations});
+
+// TODO: Try to figure out why this is not working properly
+const convertToType = (logscale, index) => Object.fromEntries([
+    [`yaxis${index === 0 ? "" : index + 1}`, {
+        type: logscale ? "log" : "linear",
+        // autorange: "reversed",
+    }]
+])
+
+const plotlyRescale = (graphDiv, logscales) =>
+    logscales.forEach((logscale, index) => Plotly.relayout(graphDiv, convertToType(logscale, index)));
 
 /**
- * LayoutUpdater is a component which updates the trace-data of a plotly graph.
+ * LayoutUpdater is a component which updates the annotations of a plotly graph.
  */
 export default class LayoutUpdater extends Component {
 
-    shouldComponentUpdate({updateData}) {
-        return isArray(updateData);
+    static #prevAnnotations = null;
+    static #prevLogscale = null;
+
+    shouldLogscaleUpdate({logscale}) {
+        return logscale !== undefined && LayoutUpdater.#prevLogscale !== logscale;
+    }
+
+    shouldAnnotationsUpdate({annotations}) {
+        return annotations !== undefined && LayoutUpdater.#prevAnnotations !== annotations;
     }
 
     render() {
-        const {id, gdID, sequentialUpdate, updateData} = this.props;
+        const {id, gdID, annotations, logscale} = this.props;
         const idDiv = <div id={id}></div>;
-        if (!this.shouldComponentUpdate(this.props)) {
+
+        if (!this.shouldLogscaleUpdate(this.props) && !this.shouldAnnotationsUpdate(this.props)) {
             return idDiv;
         }
 
@@ -37,14 +56,21 @@ export default class LayoutUpdater extends Component {
         }
 
         // EXECUTION //
-        plotlyRestyle(graphDiv, updateData[0]);
+        if (this.shouldAnnotationsUpdate(this.props)) {
+            LayoutUpdater.#prevAnnotations = annotations;
+            plotlyRestyle(graphDiv, annotations);
+        }
+
+        if (this.shouldLogscaleUpdate(this.props)) {
+            LayoutUpdater.#prevLogscale = logscale;
+            plotlyRescale(graphDiv, logscale);
+        }
 
         return idDiv;
     }
 }
 
 LayoutUpdater.defaultProps = {
-    sequentialUpdate: false,
 };
 
 LayoutUpdater.propTypes = {
@@ -69,18 +95,14 @@ LayoutUpdater.propTypes = {
     gdID: PropTypes.string.isRequired,
 
     /**
-     * Bool indicating whether the figure should be redrawn sequentially (i.e.)
-     * calling the restyle multiple times or at once.
-     * (still needs to be determined which is faster has the lowest memory peak),
-     * by default False.
+     * The data to update the graph with, it is a list containing the annotations
      */
-    sequentialUpdate: PropTypes.bool,
+    annotations: PropTypes.array,
 
     /**
-     * The data to update the graph with, must contain the `index` property for
-     * each trace; either a list of dict-traces or a single trace
+     * Tells if we should change to logscale
      */
-    updateData: PropTypes.array,
+    logscale: PropTypes.array,
 
     /**
      * Dash-assigned callback that should be called to report property changes

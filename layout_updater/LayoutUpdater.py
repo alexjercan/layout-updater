@@ -5,12 +5,16 @@ from dash.development.base_component import Component, _explicitize_args
 
 class LayoutUpdater(Component):
     """A LayoutUpdater component.
-LayoutUpdater is a component which updates the trace-data of a plotly graph.
+LayoutUpdater is a component which updates the annotations of a plotly graph.
 
 Keyword arguments:
 
 - id (string; optional):
     The ID used to identify this component in Dash callbacks.
+
+- annotations (list; optional):
+    The data to update the graph with, it is a list containing the
+    annotations.
 
 - gdID (string; required):
     The id of the graph-div whose traces should be updated.  .. Note:
@@ -24,25 +28,17 @@ Keyword arguments:
     other (partial     matching) there is no guarantee that the
     correct div will be selected.
 
-- sequentialUpdate (boolean; default False):
-    Bool indicating whether the figure should be redrawn sequentially
-    (i.e.) calling the restyle multiple times or at once. (still needs
-    to be determined which is faster has the lowest memory peak), by
-    default False.
-
-- updateData (list; optional):
-    The data to update the graph with, must contain the `index`
-    property for each trace; either a list of dict-traces or a single
-    trace."""
+- logscale (list; optional):
+    Tells if we should change to logscale."""
     _children_props = []
     _base_nodes = ['children']
     _namespace = 'layout_updater'
     _type = 'LayoutUpdater'
     @_explicitize_args
-    def __init__(self, id=Component.UNDEFINED, gdID=Component.REQUIRED, sequentialUpdate=Component.UNDEFINED, updateData=Component.UNDEFINED, **kwargs):
-        self._prop_names = ['id', 'gdID', 'sequentialUpdate', 'updateData']
+    def __init__(self, id=Component.UNDEFINED, gdID=Component.REQUIRED, annotations=Component.UNDEFINED, logscale=Component.UNDEFINED, **kwargs):
+        self._prop_names = ['id', 'annotations', 'gdID', 'logscale']
         self._valid_wildcard_attributes =            []
-        self.available_properties = ['id', 'gdID', 'sequentialUpdate', 'updateData']
+        self.available_properties = ['id', 'annotations', 'gdID', 'logscale']
         self.available_wildcard_properties =            []
         _explicit_args = kwargs.pop('_explicit_args')
         _locals = locals()

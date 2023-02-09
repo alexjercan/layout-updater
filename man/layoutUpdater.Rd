@@ -6,15 +6,17 @@
 \title{LayoutUpdater component}
 
 \description{
-LayoutUpdater is a component which updates the trace-data of a plotly graph.
+LayoutUpdater is a component which updates the annotations of a plotly graph.
 }
 
 \usage{
-layoutUpdater(id=NULL, gdID=NULL, sequentialUpdate=NULL, updateData=NULL)
+layoutUpdater(id=NULL, annotations=NULL, gdID=NULL, logscale=NULL)
 }
 
 \arguments{
 \item{id}{Character. The ID used to identify this component in Dash callbacks.}
+
+\item{annotations}{Unnamed list. The data to update the graph with, it is a list containing the annotations}
 
 \item{gdID}{Character. The id of the graph-div whose traces should be updated.
 
@@ -28,13 +30,7 @@ layoutUpdater(id=NULL, gdID=NULL, sequentialUpdate=NULL, updateData=NULL)
     graph-div IDs are used, or one graph-div-ID is a subset of the other (partial
     matching) there is no guarantee that the correct div will be selected.}
 
-\item{sequentialUpdate}{Logical. Bool indicating whether the figure should be redrawn sequentially (i.e.)
-calling the restyle multiple times or at once.
-(still needs to be determined which is faster has the lowest memory peak),
-by default False.}
-
-\item{updateData}{Unnamed list. The data to update the graph with, must contain the `index` property for
-each trace; either a list of dict-traces or a single trace}
+\item{logscale}{Unnamed list. Tells if we should change to logscale}
 }
 
 \value{named list of JSON elements corresponding to React.js properties and their values}

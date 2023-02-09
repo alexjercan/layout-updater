@@ -6,9 +6,10 @@ export layoutupdater
     layoutupdater(;kwargs...)
 
 A LayoutUpdater component.
-LayoutUpdater is a component which updates the trace-data of a plotly graph.
+LayoutUpdater is a component which updates the annotations of a plotly graph.
 Keyword arguments:
 - `id` (String; optional): The ID used to identify this component in Dash callbacks.
+- `annotations` (Array; optional): The data to update the graph with, it is a list containing the annotations
 - `gdID` (String; required): The id of the graph-div whose traces should be updated.
 
 .. Note:
@@ -20,15 +21,10 @@ Keyword arguments:
     It will select the first item of that match list; so if multiple same
     graph-div IDs are used, or one graph-div-ID is a subset of the other (partial
     matching) there is no guarantee that the correct div will be selected.
-- `sequentialUpdate` (Bool; optional): Bool indicating whether the figure should be redrawn sequentially (i.e.)
-calling the restyle multiple times or at once.
-(still needs to be determined which is faster has the lowest memory peak),
-by default False.
-- `updateData` (Array; optional): The data to update the graph with, must contain the `index` property for
-each trace; either a list of dict-traces or a single trace
+- `logscale` (Array; optional): Tells if we should change to logscale
 """
 function layoutupdater(; kwargs...)
-        available_props = Symbol[:id, :gdID, :sequentialUpdate, :updateData]
+        available_props = Symbol[:id, :annotations, :gdID, :logscale]
         wild_props = Symbol[]
         return Component("layoutupdater", "LayoutUpdater", "layout_updater", available_props, wild_props; kwargs...)
 end
