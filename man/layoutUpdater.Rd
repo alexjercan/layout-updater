@@ -10,7 +10,7 @@ LayoutUpdater is a component which updates the annotations of a plotly graph.
 }
 
 \usage{
-layoutUpdater(id=NULL, annotations=NULL, gdID=NULL, logscale=NULL)
+layoutUpdater(id=NULL, annotations=NULL, gdID=NULL, shapes=NULL)
 }
 
 \arguments{
@@ -30,7 +30,7 @@ layoutUpdater(id=NULL, annotations=NULL, gdID=NULL, logscale=NULL)
     graph-div IDs are used, or one graph-div-ID is a subset of the other (partial
     matching) there is no guarantee that the correct div will be selected.}
 
-\item{logscale}{Unnamed list. Tells if we should change to logscale}
+\item{shapes}{Unnamed list. The data to update the graph with, it is a list containing the shapes}
 }
 
 \value{named list of JSON elements corresponding to React.js properties and their values}

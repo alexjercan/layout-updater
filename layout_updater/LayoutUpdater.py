@@ -28,17 +28,18 @@ Keyword arguments:
     other (partial     matching) there is no guarantee that the
     correct div will be selected.
 
-- logscale (list; optional):
-    Tells if we should change to logscale."""
+- shapes (list; optional):
+    The data to update the graph with, it is a list containing the
+    shapes."""
     _children_props = []
     _base_nodes = ['children']
     _namespace = 'layout_updater'
     _type = 'LayoutUpdater'
     @_explicitize_args
-    def __init__(self, id=Component.UNDEFINED, gdID=Component.REQUIRED, annotations=Component.UNDEFINED, logscale=Component.UNDEFINED, **kwargs):
-        self._prop_names = ['id', 'annotations', 'gdID', 'logscale']
+    def __init__(self, id=Component.UNDEFINED, gdID=Component.REQUIRED, annotations=Component.UNDEFINED, shapes=Component.UNDEFINED, **kwargs):
+        self._prop_names = ['id', 'annotations', 'gdID', 'shapes']
         self._valid_wildcard_attributes =            []
-        self.available_properties = ['id', 'annotations', 'gdID', 'logscale']
+        self.available_properties = ['id', 'annotations', 'gdID', 'shapes']
         self.available_wildcard_properties =            []
         _explicit_args = kwargs.pop('_explicit_args')
         _locals = locals()

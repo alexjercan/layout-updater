@@ -59,16 +59,12 @@ figure.add_trace(
     row=1,
     col=1,
 )
-# figure.update_yaxes(type="log", row=1, col=1)
 
 figure.add_trace(
     go.Scattergl(x=[1, 2, 3, 4, 5, 6, 7], y=[7, 6, 5, 4, 3, 2, 1]),
     row=2,
     col=1,
 )
-# figure.update_yaxes(type="log", row=2, col=1)
-
-print(figure)
 
 app.layout = html.Div(
     [
@@ -86,10 +82,26 @@ app.layout = html.Div(
         ),
         html.Button(
             id="button2",
-            children="Add logscale",
+            children="Add shape",
         ),
     ]
 )
+
+
+@app.callback(
+    Output("input", "shapes"),
+    Input("button2", "n_clicks"),
+    State("figure", "figure"),
+)
+def add_shape(n_clicks, fig):
+    if n_clicks is None:
+        return no_update
+
+    return [{'type': 'line', 'x0': 1, 'x1': 1, 'xref': 'x', 'y0': 0, 'y1': 1, 'yref': 'y domain'}]
+
+
+if __name__ == "__main__":
+    app.run_server(debug=True)
 
 
 @app.callback(
