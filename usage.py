@@ -7,7 +7,7 @@ from plotly.subplots import make_subplots
 app = Dash(__name__)
 
 figure = make_subplots(
-    rows=2, cols=1, specs=[[{"type": "scatter"}], [{"type": "scatter"}]]
+    rows=2, cols=1, specs=[[{"type": "scatter"}], [{"type": "scatter"}]], subplot_titles=["a", "b"]
 )
 
 linscale_args = {f"yaxis{'' if index == 0 else index+1}.type": "linear" for index in range(2)}
@@ -84,8 +84,24 @@ app.layout = html.Div(
             id="button2",
             children="Add shape",
         ),
+        html.Button(
+            id="button3",
+            children="store init",
+        ),
     ]
 )
+
+
+@app.callback(
+    Output("input", "initLayout"),
+    Input("button3", "n_clicks"),
+    State("figure", "figure"),
+    State("input", "initLayout"),
+    prevent_initial_call=True,
+)
+def store_init(n_clicks, fig, init):
+    print(init)
+    return {"annotations": fig["layout"].get("annotations", []), "shapes": fig["layout"].get("shapes", [])}
 
 
 @app.callback(

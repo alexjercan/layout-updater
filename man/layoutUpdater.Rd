@@ -10,7 +10,8 @@ LayoutUpdater is a component which updates the annotations of a plotly graph.
 }
 
 \usage{
-layoutUpdater(id=NULL, annotations=NULL, gdID=NULL, shapes=NULL)
+layoutUpdater(id=NULL, annotations=NULL, gdID=NULL, initLayout=NULL,
+shapes=NULL)
 }
 
 \arguments{
@@ -29,6 +30,8 @@ layoutUpdater(id=NULL, annotations=NULL, gdID=NULL, shapes=NULL)
     It will select the first item of that match list; so if multiple same
     graph-div IDs are used, or one graph-div-ID is a subset of the other (partial
     matching) there is no guarantee that the correct div will be selected.}
+
+\item{initLayout}{Named list. The initial layout of the component}
 
 \item{shapes}{Unnamed list. The data to update the graph with, it is a list containing the shapes}
 }

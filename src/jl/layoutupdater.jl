@@ -21,10 +21,11 @@ Keyword arguments:
     It will select the first item of that match list; so if multiple same
     graph-div IDs are used, or one graph-div-ID is a subset of the other (partial
     matching) there is no guarantee that the correct div will be selected.
+- `initLayout` (Dict; optional): The initial layout of the component
 - `shapes` (Array; optional): The data to update the graph with, it is a list containing the shapes
 """
 function layoutupdater(; kwargs...)
-        available_props = Symbol[:id, :annotations, :gdID, :shapes]
+        available_props = Symbol[:id, :annotations, :gdID, :initLayout, :shapes]
         wild_props = Symbol[]
         return Component("layoutupdater", "LayoutUpdater", "layout_updater", available_props, wild_props; kwargs...)
 end

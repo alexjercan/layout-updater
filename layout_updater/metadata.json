@@ -26,6 +26,18 @@
           }
         ],
         "returns": null
+      },
+      {
+        "name": "shouldInitUpdate",
+        "docblock": null,
+        "modifiers": [],
+        "params": [
+          {
+            "name": "{initLayout}",
+            "type": null
+          }
+        ],
+        "returns": null
       }
     ],
     "props": {
@@ -56,6 +68,13 @@
         },
         "required": false,
         "description": "The data to update the graph with, it is a list containing the shapes"
+      },
+      "initLayout": {
+        "type": {
+          "name": "object"
+        },
+        "required": false,
+        "description": "The initial layout of the component"
       },
       "setProps": {
         "type": {

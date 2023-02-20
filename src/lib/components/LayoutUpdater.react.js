@@ -17,6 +17,10 @@ export default class LayoutUpdater extends Component {
 
     static #prevAnnotations = null;
     static #prevShapes = null;
+    static #initLayout = {
+        annotations: [],
+        shapes: [],
+    };
 
     shouldAnnotationsUpdate({annotations}) {
         return annotations !== undefined && LayoutUpdater.#prevAnnotations !== annotations;
@@ -26,11 +30,15 @@ export default class LayoutUpdater extends Component {
         return shapes !== undefined && LayoutUpdater.#prevShapes !== shapes;
     }
 
+    shouldInitUpdate({initLayout}) {
+        return initLayout !== undefined;
+    }
+
     render() {
-        const {id, gdID, annotations, shapes} = this.props;
+        const {id, gdID, annotations, shapes, initLayout} = this.props;
         const idDiv = <div id={id}></div>;
 
-        if (!this.shouldAnnotationsUpdate(this.props) && !this.shouldShapesUpdate(this.props)) {
+        if (!this.shouldAnnotationsUpdate(this.props) && !this.shouldShapesUpdate(this.props) && !this.shouldInitUpdate(this.props)) {
             return idDiv;
         }
 
@@ -56,6 +64,10 @@ export default class LayoutUpdater extends Component {
         if (this.shouldShapesUpdate(this.props)) {
             LayoutUpdater.#prevShapes = shapes;
             plotlyReshape(graphDiv, shapes);
+        }
+
+        if (this.shouldInitUpdate(this.props)) {
+            LayoutUpdater.#initLayout = initLayout;
         }
 
         return idDiv;
@@ -95,6 +107,11 @@ LayoutUpdater.propTypes = {
      * The data to update the graph with, it is a list containing the shapes
      */
     shapes: PropTypes.array,
+
+    /**
+     * The initial layout of the component
+     */
+    initLayout: PropTypes.object,
 
     /**
      * Dash-assigned callback that should be called to report property changes

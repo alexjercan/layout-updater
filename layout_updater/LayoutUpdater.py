@@ -28,6 +28,9 @@ Keyword arguments:
     other (partial     matching) there is no guarantee that the
     correct div will be selected.
 
+- initLayout (dict; optional):
+    The initial layout of the component.
+
 - shapes (list; optional):
     The data to update the graph with, it is a list containing the
     shapes."""
@@ -36,10 +39,10 @@ Keyword arguments:
     _namespace = 'layout_updater'
     _type = 'LayoutUpdater'
     @_explicitize_args
-    def __init__(self, id=Component.UNDEFINED, gdID=Component.REQUIRED, annotations=Component.UNDEFINED, shapes=Component.UNDEFINED, **kwargs):
-        self._prop_names = ['id', 'annotations', 'gdID', 'shapes']
+    def __init__(self, id=Component.UNDEFINED, gdID=Component.REQUIRED, annotations=Component.UNDEFINED, shapes=Component.UNDEFINED, initLayout=Component.UNDEFINED, **kwargs):
+        self._prop_names = ['id', 'annotations', 'gdID', 'initLayout', 'shapes']
         self._valid_wildcard_attributes =            []
-        self.available_properties = ['id', 'annotations', 'gdID', 'shapes']
+        self.available_properties = ['id', 'annotations', 'gdID', 'initLayout', 'shapes']
         self.available_wildcard_properties =            []
         _explicit_args = kwargs.pop('_explicit_args')
         _locals = locals()
