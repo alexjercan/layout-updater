@@ -116,10 +116,6 @@ def add_shape(n_clicks, fig):
     return [{'type': 'line', 'x0': 1, 'x1': 1, 'xref': 'x', 'y0': 0, 'y1': 1, 'yref': 'y domain'}]
 
 
-if __name__ == "__main__":
-    app.run_server(debug=True)
-
-
 @app.callback(
     Output("input", "annotations"),
     Input("button", "n_clicks"),

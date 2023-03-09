@@ -1,14 +1,61 @@
 import {Component} from 'react';
 import PropTypes from 'prop-types';
-import { isElement } from 'lodash';
+import {
+    head,
+    tail,
+    isPlainObject,
+    isArray,
+    isNil,
+    flatMap,
+    keys,
+    toPairs,
+    fromPairs,
+    mapValues,
+    zipObject,
+    isElement,
+    uniq
+} from 'lodash';
 
 
 // HELPER FUNCTIONS //
-const plotlyRestyle = (graphDiv, annotations) =>
+const plotlyReannotate = (graphDiv, annotations) =>
     Plotly.relayout(graphDiv, {annotations: annotations});
 
 const plotlyReshape = (graphDiv, shapes) =>
     Plotly.relayout(graphDiv, {shapes: shapes});
+
+const plotlyRestyle = (graphDiv, {index, ...update}) =>
+    Plotly.restyle(graphDiv, update, index);
+
+const isValidTrace = (trace) =>
+    isPlainObject(trace) && !isNil(trace.index);
+
+const filterTrace = (trace) => fromPairs(
+    toPairs(trace)
+        .filter(([_, value]) => !isNil(value))
+        .filter(([key, _]) => !['x', 'y'].includes(key) || trace.x !== [])
+);
+
+const filterTraces = (traces) =>
+    traces
+        .filter(isValidTrace)
+        .map(filterTrace);
+
+const mergeKeys = (traces) =>
+    uniq(flatMap(traces, keys));
+
+const mergeValues = (traces, allkeys) =>
+    allkeys.map(
+        key => traces.map(
+            trace => trace[key] ?? []
+        )
+    );
+
+const mergeTraces = (traces) => {
+    const allkeys = mergeKeys(traces);
+    const allvalues = mergeValues(traces, allkeys);
+    return zipObject(allkeys, allvalues);
+};
 
 /**
  * LayoutUpdater is a component which updates the annotations of a plotly graph.
@@ -17,6 +64,7 @@ export default class LayoutUpdater extends Component {
 
     static #prevAnnotations = null;
     static #prevShapes = null;
+    static #previousLayout = null;
     static #initLayout = {
         annotations: [],
         shapes: [],
@@ -30,15 +78,19 @@ export default class LayoutUpdater extends Component {
         return shapes !== undefined && LayoutUpdater.#prevShapes !== shapes;
     }
 
+    shouldDataUpdate({updateData}) {
+        return updateData !== undefined && TraceUpdater.#previousLayout !== head(updateData);
+    }
+
     shouldInitUpdate({initLayout}) {
         return initLayout !== undefined;
     }
 
     render() {
-        const {id, gdID, annotations, shapes, initLayout} = this.props;
+        const {id, gdID, annotations, shapes, updateData, initLayout} = this.props;
         const idDiv = <div id={id}></div>;
 
-        if (!this.shouldAnnotationsUpdate(this.props) && !this.shouldShapesUpdate(this.props) && !this.shouldInitUpdate(this.props)) {
+        if (!this.shouldAnnotationsUpdate(this.props) && !this.shouldShapesUpdate(this.props) && !this.shouldDataUpdate(this.props) && !this.shouldInitUpdate(this.props)) {
             return idDiv;
         }
 
@@ -58,12 +110,18 @@ export default class LayoutUpdater extends Component {
         // EXECUTION //
         if (this.shouldAnnotationsUpdate(this.props)) {
             LayoutUpdater.#prevAnnotations = annotations;
-            plotlyRestyle(graphDiv, annotations);
+            plotlyReannotate(graphDiv, annotations);
         }
 
         if (this.shouldShapesUpdate(this.props)) {
             LayoutUpdater.#prevShapes = shapes;
             plotlyReshape(graphDiv, shapes);
+        }
+
+        if (this.shouldDataUpdate(this.props)) {
+            TraceUpdater.#previousLayout = head(updateData);
+            const traces = filterTraces(tail(updateData));
+            plotlyRestyle(graphDiv, mergeTraces(traces));
         }
 
         if (this.shouldInitUpdate(this.props)) {
@@ -107,6 +165,12 @@ LayoutUpdater.propTypes = {
      * The data to update the graph with, it is a list containing the shapes
      */
     shapes: PropTypes.array,
+
+    /**
+     * The data to update the graph with, must contain the `index` property for
+     * each trace; either a list of dict-traces or a single trace
+     */
+    updateData: PropTypes.array,
 
     /**
      * The initial layout of the component

@@ -11,7 +11,7 @@ LayoutUpdater is a component which updates the annotations of a plotly graph.
 
 \usage{
 layoutUpdater(id=NULL, annotations=NULL, gdID=NULL, initLayout=NULL,
-shapes=NULL)
+shapes=NULL, updateData=NULL)
 }
 
 \arguments{
@@ -34,6 +34,9 @@ shapes=NULL)
 \item{initLayout}{Named list. The initial layout of the component}
 
 \item{shapes}{Unnamed list. The data to update the graph with, it is a list containing the shapes}
+
+\item{updateData}{Unnamed list. The data to update the graph with, must contain the `index` property for
+each trace; either a list of dict-traces or a single trace}
 }
 
 \value{named list of JSON elements corresponding to React.js properties and their values}
