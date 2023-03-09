@@ -79,7 +79,7 @@ export default class LayoutUpdater extends Component {
     }
 
     shouldDataUpdate({updateData}) {
-        return updateData !== undefined && TraceUpdater.#previousLayout !== head(updateData);
+        return updateData !== undefined && LayoutUpdater.#previousLayout !== head(updateData);
     }
 
     shouldInitUpdate({initLayout}) {
@@ -119,7 +119,7 @@ export default class LayoutUpdater extends Component {
         }
 
         if (this.shouldDataUpdate(this.props)) {
-            TraceUpdater.#previousLayout = head(updateData);
+            LayoutUpdater.#previousLayout = head(updateData);
             const traces = filterTraces(tail(updateData));
             plotlyRestyle(graphDiv, mergeTraces(traces));
         }
