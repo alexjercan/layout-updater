@@ -10,7 +10,6 @@ import {
     keys,
     toPairs,
     fromPairs,
-    mapValues,
     zipObject,
     isElement,
     uniq
@@ -30,16 +29,8 @@ const plotlyRestyle = (graphDiv, {index, ...update}) =>
 const isValidTrace = (trace) =>
     isPlainObject(trace) && !isNil(trace.index);
 
-const filterTrace = (trace) => fromPairs(
-    toPairs(trace)
-        .filter(([_, value]) => !isNil(value))
-        .filter(([key, _]) => !['x', 'y'].includes(key) || trace.x !== [])
-);
-
 const filterTraces = (traces) =>
-    traces
-        .filter(isValidTrace)
-        .map(filterTrace);
+    traces.filter(isValidTrace);
 
 const mergeKeys = (traces) =>
     uniq(flatMap(traces, keys));
@@ -64,7 +55,7 @@ export default class LayoutUpdater extends Component {
 
     static #prevAnnotations = null;
     static #prevShapes = null;
-    static #previousLayout = null;
+    static #prevLayout = null;
     static #initLayout = {
         annotations: [],
         shapes: [],
@@ -79,7 +70,7 @@ export default class LayoutUpdater extends Component {
     }
 
     shouldDataUpdate({updateData}) {
-        return updateData !== undefined && LayoutUpdater.#previousLayout !== head(updateData);
+        return updateData !== undefined && isArray(updateData) && LayoutUpdater.#prevLayout !== head(updateData);
     }
 
     shouldInitUpdate({initLayout}) {
@@ -119,7 +110,7 @@ export default class LayoutUpdater extends Component {
         }
 
         if (this.shouldDataUpdate(this.props)) {
-            LayoutUpdater.#previousLayout = head(updateData);
+            LayoutUpdater.#prevLayout = head(updateData);
             const traces = filterTraces(tail(updateData));
             plotlyRestyle(graphDiv, mergeTraces(traces));
         }

@@ -88,6 +88,10 @@ app.layout = html.Div(
             id="button3",
             children="store init",
         ),
+        html.Button(
+            id="button4",
+            children="resampler",
+        ),
     ]
 )
 
@@ -136,6 +140,18 @@ def add_anno(n_clicks, fig):
             "ay": -40,
         }
     ]
+
+
+@app.callback(
+    Output("input", "updateData"),
+    Input("button4", "n_clicks"),
+    State("figure", "figure"),
+)
+def add_resampler(n_clicks, fig):
+    if n_clicks is None:
+        return no_update
+
+    return [{}, {"index": 1, "x": [1,2,4], "y": [1,2,4]}]
 
 
 if __name__ == "__main__":

@@ -1,6 +1,6 @@
 Package: layoutUpdater
 Title: Project Description
-Version: 0.0.10
+Version: 0.0.12
 Description: Project Description
 Depends: R (>= 3.0.2)
 Imports: 
