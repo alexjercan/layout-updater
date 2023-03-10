@@ -8,8 +8,6 @@ import {
     isNil,
     flatMap,
     keys,
-    toPairs,
-    fromPairs,
     zipObject,
     isElement,
     uniq
