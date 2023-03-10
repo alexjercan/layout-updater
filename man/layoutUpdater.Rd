@@ -10,14 +10,17 @@ LayoutUpdater is a component which updates the annotations of a plotly graph.
 }
 
 \usage{
-layoutUpdater(id=NULL, annotations=NULL, gdID=NULL, initLayout=NULL,
-shapes=NULL, updateData=NULL)
+layoutUpdater(id=NULL, data=NULL, gdID=NULL, initLayout=NULL)
 }
 
 \arguments{
 \item{id}{Character. The ID used to identify this component in Dash callbacks.}
 
-\item{annotations}{Unnamed list. The data to update the graph with, it is a list containing the annotations}
+\item{data}{Unnamed list. The data to update the graph with,
+it is an object containing
+  - list containing the annotations
+  - list with shapes
+  - list updateData}
 
 \item{gdID}{Character. The id of the graph-div whose traces should be updated.
 
@@ -32,11 +35,6 @@ shapes=NULL, updateData=NULL)
     matching) there is no guarantee that the correct div will be selected.}
 
 \item{initLayout}{Named list. The initial layout of the component}
-
-\item{shapes}{Unnamed list. The data to update the graph with, it is a list containing the shapes}
-
-\item{updateData}{Unnamed list. The data to update the graph with, must contain the `index` property for
-each trace; either a list of dict-traces or a single trace}
 }
 
 \value{named list of JSON elements corresponding to React.js properties and their values}

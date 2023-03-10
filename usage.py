@@ -77,20 +77,12 @@ app.layout = html.Div(
             figure=figure,
         ),
         html.Button(
-            id="button",
-            children="Add annotation",
-        ),
-        html.Button(
             id="button2",
-            children="Add shape",
+            children="Add All",
         ),
         html.Button(
             id="button3",
             children="store init",
-        ),
-        html.Button(
-            id="button4",
-            children="resampler",
         ),
     ]
 )
@@ -109,27 +101,16 @@ def store_init(n_clicks, fig, init):
 
 
 @app.callback(
-    Output("input", "shapes"),
+    Output("input", "data"),
     Input("button2", "n_clicks"),
     State("figure", "figure"),
 )
-def add_shape(n_clicks, fig):
+def add_all(n_clicks, fig):
     if n_clicks is None:
         return no_update
 
-    return [{'type': 'line', 'x0': 1, 'x1': 1, 'xref': 'x', 'y0': 0, 'y1': 1, 'yref': 'y domain'}]
-
-
-@app.callback(
-    Output("input", "annotations"),
-    Input("button", "n_clicks"),
-    State("figure", "figure"),
-)
-def add_anno(n_clicks, fig):
-    if n_clicks is None:
-        return no_update
-
-    return [
+    shapes = [{'type': 'line', 'x0': 1, 'x1': 1, 'xref': 'x', 'y0': 0, 'y1': 1, 'yref': 'y domain'}]
+    annotations = [
         {
             "text": "text",
             "x": 1,
@@ -140,18 +121,9 @@ def add_anno(n_clicks, fig):
             "ay": -40,
         }
     ]
+    update_data = [{}, {"index": 1, "x": [1,2,4], "y": [1,2,4]}]
 
-
-@app.callback(
-    Output("input", "updateData"),
-    Input("button4", "n_clicks"),
-    State("figure", "figure"),
-)
-def add_resampler(n_clicks, fig):
-    if n_clicks is None:
-        return no_update
-
-    return [{}, {"index": 1, "x": [1,2,4], "y": [1,2,4]}]
+    return [annotations, shapes, update_data]
 
 
 if __name__ == "__main__":
