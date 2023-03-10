@@ -12,10 +12,9 @@ Keyword arguments:
 - id (string; optional):
     The ID used to identify this component in Dash callbacks.
 
-- data (list; optional):
-    The data to update the graph with, it is an object containing   -
-    list containing the annotations   - list with shapes   - list
-    updateData.
+- annotations (list; optional):
+    The data to update the graph with, it is a list containing the
+    annotations.
 
 - gdID (string; required):
     The id of the graph-div whose traces should be updated.  .. Note:
@@ -30,16 +29,25 @@ Keyword arguments:
     correct div will be selected.
 
 - initLayout (dict; optional):
-    The initial layout of the component."""
+    The initial layout of the component.
+
+- shapes (list; optional):
+    The data to update the graph with, it is a list containing the
+    shapes.
+
+- updateData (list; optional):
+    The data to update the graph with, must contain the `index`
+    property for each trace; either a list of dict-traces or a single
+    trace."""
     _children_props = []
     _base_nodes = ['children']
     _namespace = 'layout_updater'
     _type = 'LayoutUpdater'
     @_explicitize_args
-    def __init__(self, id=Component.UNDEFINED, gdID=Component.REQUIRED, data=Component.UNDEFINED, initLayout=Component.UNDEFINED, **kwargs):
-        self._prop_names = ['id', 'data', 'gdID', 'initLayout']
+    def __init__(self, id=Component.UNDEFINED, gdID=Component.REQUIRED, annotations=Component.UNDEFINED, shapes=Component.UNDEFINED, updateData=Component.UNDEFINED, initLayout=Component.UNDEFINED, **kwargs):
+        self._prop_names = ['id', 'annotations', 'gdID', 'initLayout', 'shapes', 'updateData']
         self._valid_wildcard_attributes =            []
-        self.available_properties = ['id', 'data', 'gdID', 'initLayout']
+        self.available_properties = ['id', 'annotations', 'gdID', 'initLayout', 'shapes', 'updateData']
         self.available_wildcard_properties =            []
         _explicit_args = kwargs.pop('_explicit_args')
         _locals = locals()

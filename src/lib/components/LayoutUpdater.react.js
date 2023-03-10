@@ -59,31 +59,27 @@ export default class LayoutUpdater extends Component {
         shapes: [],
     };
 
-    shouldAnnotationsUpdate(annotations) {
+    shouldAnnotationsUpdate({annotations}) {
         return annotations !== undefined && LayoutUpdater.#prevAnnotations !== annotations;
     }
 
-    shouldShapesUpdate(shapes) {
+    shouldShapesUpdate({shapes}) {
         return shapes !== undefined && LayoutUpdater.#prevShapes !== shapes;
     }
 
-    shouldDataUpdate(updateData) {
+    shouldDataUpdate({updateData}) {
         return updateData !== undefined && isArray(updateData) && LayoutUpdater.#prevLayout !== head(updateData);
     }
 
-    shouldInitUpdate(initLayout) {
+    shouldInitUpdate({initLayout}) {
         return initLayout !== undefined;
     }
 
     render() {
-        const {id, gdID, data, initLayout} = this.props;
+        const {id, gdID, annotations, shapes, updateData, initLayout} = this.props;
         const idDiv = <div id={id}></div>;
-        if (data === undefined) {
-            return idDiv;
-        }
 
-        const [ annotations, shapes, updateData ] = data;
-        if (!this.shouldAnnotationsUpdate(annotations) && !this.shouldShapesUpdate(shapes) && !this.shouldDataUpdate(updateData) && !this.shouldInitUpdate(initLayout)) {
+        if (!this.shouldAnnotationsUpdate(this.props) && !this.shouldShapesUpdate(this.props) && !this.shouldDataUpdate(this.props) && !this.shouldInitUpdate(this.props)) {
             return idDiv;
         }
 
@@ -101,17 +97,17 @@ export default class LayoutUpdater extends Component {
         }
 
         // EXECUTION //
-        if (this.shouldAnnotationsUpdate(annotations)) {
+        if (this.shouldAnnotationsUpdate(this.props)) {
             LayoutUpdater.#prevAnnotations = annotations;
             plotlyReannotate(graphDiv, annotations);
         }
 
-        if (this.shouldShapesUpdate(shapes)) {
+        if (this.shouldShapesUpdate(this.props)) {
             LayoutUpdater.#prevShapes = shapes;
             plotlyReshape(graphDiv, shapes);
         }
 
-        if (this.shouldDataUpdate(updateData)) {
+        if (this.shouldDataUpdate(this.props)) {
             LayoutUpdater.#prevLayout = head(updateData);
             const traces = filterTraces(tail(updateData));
             plotlyRestyle(graphDiv, mergeTraces(traces));
@@ -150,13 +146,20 @@ LayoutUpdater.propTypes = {
     gdID: PropTypes.string.isRequired,
 
     /**
-     * The data to update the graph with,
-     * it is an object containing
-     *   - list containing the annotations
-     *   - list with shapes
-     *   - list updateData
+     * The data to update the graph with, it is a list containing the annotations
      */
-    data: PropTypes.array,
+    annotations: PropTypes.array,
+
+    /**
+     * The data to update the graph with, it is a list containing the shapes
+     */
+    shapes: PropTypes.array,
+
+    /**
+     * The data to update the graph with, must contain the `index` property for
+     * each trace; either a list of dict-traces or a single trace
+     */
+    updateData: PropTypes.array,
 
     /**
      * The initial layout of the component
@@ -169,4 +172,5 @@ LayoutUpdater.propTypes = {
      */
     setProps: PropTypes.func
 };
+
 
